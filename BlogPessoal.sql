@@ -15,50 +15,49 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`tb_usuário`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`tb_usuário` (
-  `id_usuário` INT NOT NULL,
-  `email` VARCHAR(45) NULL,
-  `nickname` VARCHAR(45) NULL,
-  `avatar` VARCHAR(45) NULL,
-  `profissão` VARCHAR(45) NULL,
-  PRIMARY KEY (`id_usuário`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`tb_temas`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`tb_temas` (
-  `id_temas` INT NOT NULL,
-  `Culinária` VARCHAR(45) NULL,
-  `Tecnologia` VARCHAR(45) NULL,
-  `Economia` VARCHAR(45) NULL,
-  PRIMARY KEY (`id_temas`))
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `descrição` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tb_postagem`
+-- Table `mydb`.`tb_usuarios`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`tb_postagem` (
-  `id_post` INT NOT NULL,
-  `comentário` VARCHAR(45) NULL,
-  `imagem` VARCHAR(45) NULL,
-  `tb_temas_id_temas` INT NOT NULL,
-  `tb_usuário_id_usuário` INT NOT NULL,
-  PRIMARY KEY (`id_post`, `tb_temas_id_temas`, `tb_usuário_id_usuário`),
-  INDEX `fk_tb_postagem_tb_temas_idx` (`tb_temas_id_temas` ASC) VISIBLE,
-  INDEX `fk_tb_postagem_tb_usuário1_idx` (`tb_usuário_id_usuário` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_postagem_tb_temas`
-    FOREIGN KEY (`tb_temas_id_temas`)
-    REFERENCES `mydb`.`tb_temas` (`id_temas`)
+CREATE TABLE IF NOT EXISTS `mydb`.`tb_usuarios` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `usuario` VARCHAR(255) NOT NULL,
+  `senha` VARCHAR(255) NOT NULL,
+  `foto` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`tb_postagens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`tb_postagens` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `titulo` VARCHAR(100) NOT NULL,
+  `texto` VARCHAR(1000) NOT NULL,
+  `data` DATE NULL,
+  `usuarios_id` BIGINT NOT NULL,
+  `tb_temas_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tb_postagens_tb_usuarios_idx` (`usuarios_id` ASC) VISIBLE,
+  INDEX `fk_tb_postagens_tb_temas1_idx` (`tb_temas_id` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_postagens_tb_usuarios`
+    FOREIGN KEY (`usuarios_id`)
+    REFERENCES `mydb`.`tb_usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_postagem_tb_usuário1`
-    FOREIGN KEY (`tb_usuário_id_usuário`)
-    REFERENCES `mydb`.`tb_usuário` (`id_usuário`)
+  CONSTRAINT `fk_tb_postagens_tb_temas1`
+    FOREIGN KEY (`tb_temas_id`)
+    REFERENCES `mydb`.`tb_temas` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
